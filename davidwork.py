@@ -1,9 +1,12 @@
 import math, copy, random
 from cmu_112_graphics import * 
+from PIL import Image
 
-class invader:
-    def __init__(self):
-        pass
+class Invader:
+    def __init__(self, x, y, r):
+        self.x = x
+        self.y = y
+        self.r = r
 
 class bullets:
     def __init__(self, app):
@@ -21,6 +24,16 @@ class enemy():
         return [self.x, self.y]
 
 def appStarted(app):
+    #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
+    app.image1 = Image.open("./space.png")
+    app.spaceResize = app.image1.resize((app.width, app.height))
+    app.backgroundIMG = ImageTk.PhotoImage(app.spaceResize)
+
+    app.image2 = Image.open("./spaceship.png")
+    app.shipResize = app.image2.resize((app.width//7, app.height//7))
+    app.spaceShip = ImageTk.PhotoImage(app.shipResize)
+    
+
     app.width = 400
     app.height = 400
     app.enemyList = []
@@ -29,23 +42,40 @@ def appStarted(app):
     app.enemyTime = 0
     app.bulletTime = 0
 
-def keyStarted(app,event):
-    pass
+    app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 10)
+    app.dx = 10
+    app.playerBullets = []
+
+def keyPressed(app,event):
+    if event.key == "r":
+        app.spaceShip = app.spaceShip.rotate(20)
+
+    if event.key == "e":
+        app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
+
+    if event.key == 'Space':
+        app.bulletX, app.bulletY = app.player.X, app.player.Y
+        app.playerBullets.append((app.bulletX, app.bulletY))
+    if event.key == 'Right':
+        app.player.x += app.dx
+        print(app.player.x)
+    if event.key == 'Left':
+        app.player.x -= app.dx
 
 def timerFired(app):
+    for (app.bulletX, app.bulletY) in app.playerBullets:
+        app.bulletY -= 10
+
     app.enemyTime += 100
     if app.enemyTime == 1000 and len(app.enemyList) < 7:
          currentEnemy = enemy(app)
          x = currentEnemy.getXY()[0]
          y = currentEnemy.getXY()[1]
-         print(x,y)
          if x not in app.enemyXSet:
             app.enemyList = app.enemyList + [[x,y]]
             app.enemyDict[x] = y
             app.enemyXSet.add(x)
 
-         print(app.enemyList)
-         print(app.enemyDict)
          app.enemyTime = 0
 
     for cords in app.enemyList:
@@ -61,7 +91,6 @@ def timerFired(app):
                     app.enemyDict[bullet] = cords[1]
             continue
         app.enemyDict[bullet] += 5
-        print(app.enemyDict)
 
 def exampleBullet(app,canvas):
     for bullet in app.enemyDict:
@@ -75,11 +104,20 @@ def exampleEnemy(app,canvas):
         x = enemy[0]
         y = enemy[1]
         r = 15
-        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")
+        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")    
 
 def redrawAll(app,canvas):
+    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    canvas.create_image(200, 300, image = app.spaceShip)
+
     exampleEnemy(app,canvas)
-    exampleBullet(app, canvas)    
+    exampleBullet(app, canvas) 
+
+    canvas.create_oval(app.player.x - app.player.r, app.player.y - app.player.r, 
+                     app.player.x + app.player.r, app.player.y +app.player.r)
+    for (app.bulletX, app.bulletY) in app.playerBullets:
+        canvas.create_oval(app.bulletX - app.player.r, app.bulletY - app.player.r,
+                           app.bulletX + app.player.r, app.bulletY + app.player.r)   
 
 def main():
     runApp(width = 400, height = 400)
