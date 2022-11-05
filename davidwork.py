@@ -18,12 +18,6 @@ class bullets:
 class enemy():
     def __init__(self, app):
         self.x = random.randrange(app.width//6, app.width * 5//6, 40)
-
-        if self.x in app.enemyXSet:
-            self.x = random.randrange(app.width//6, app.width * 5//6, 40)
-
-        app.enemyXSet.add(self.x)
-
         self.y = 10
 
     def getXY(self):
@@ -35,42 +29,61 @@ def appStarted(app):
     app.enemyList = []
     app.enemyDict = dict()
     app.enemyXSet = set()
-    app.time = 0
+    app.enemyTime = 0
+    app.bulletTime = 0
 
 def keyStarted(app,event):
-    if event.key == "Up":
-        app.invader.dx += 1
     pass
 
 def timerFired(app):
-    app.time += 100
-    if app.time == 1000:
-         x = enemy(app).getXY()[0]
-         y = enemy(app).getXY()[1]
-         app.enemyList = app.enemyList + [(enemy(app).getXY())]
-         app.enemyDict[x] = y
+    app.enemyTime += 100
+    if app.enemyTime == 1000:
+         currentEnemy = enemy(app)
+         x = currentEnemy.getXY()[0]
+         y = currentEnemy.getXY()[1]
+         print(x,y)
+         if x not in app.enemyXSet:
+            app.enemyList = app.enemyList + [[x,y]]
+            app.enemyDict[x] = y
+            app.enemyXSet.add(x)
+
          print(app.enemyList)
          print(app.enemyDict)
-         app.time = 0
+         app.enemyTime = 0
 
     for cords in app.enemyList:
-        print(cords)
-        cords[1] += 1
-        app.enemyDict.get(cords[0],0) + 1
+        yVal = cords[1]
+        yVal += 1
+        cords[1] = yVal
+
+    app.bulletTime += 100
+    for bullet in app.enemyDict:
+        if app.enemyDict[bullet] > app.height:
+            for cords in app.enemyList:
+                if cords[0] == bullet:
+                    app.enemyDict[bullet] = cords[1]
+            continue
+        app.enemyDict[bullet] += 5
         print(app.enemyDict)
 
 def exampleBullet(app,canvas):
-    pass
+    for bullet in app.enemyDict:
+        x = bullet
+        y = app.enemyDict[bullet]
+        r = 10
+        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "green")
+
 
 def exampleEnemy(app,canvas):
     for enemy in app.enemyList:
         x = enemy[0]
         y = enemy[1]
-        r = 10
+        r = 15
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")
 
 def redrawAll(app,canvas):
-    exampleEnemy(app,canvas)    
+    exampleEnemy(app,canvas)
+    exampleBullet(app, canvas)    
 
 def main():
     runApp(width = 400, height = 400)
