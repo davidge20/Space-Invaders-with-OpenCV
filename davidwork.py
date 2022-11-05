@@ -1,5 +1,6 @@
 import math, copy, random
 from cmu_112_graphics import * 
+from PIL import Image
 
 class invader:
     def __init__(self):
