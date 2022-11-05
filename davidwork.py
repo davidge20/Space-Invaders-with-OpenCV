@@ -29,6 +29,7 @@ def appStarted(app):
     app.enemyXSet = set()
     app.enemyTime = 0
     app.bulletTime = 0
+    app.backgroundIMG = PhotoImage(file = "space.png")
 
 def keyStarted(app,event):
     pass
@@ -76,9 +77,10 @@ def exampleEnemy(app,canvas):
         x = enemy[0]
         y = enemy[1]
         r = 15
-        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")
+        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")    
 
 def redrawAll(app,canvas):
+    canvas.create_image( 0, 0, image = app.backgroundIMG)
     exampleEnemy(app,canvas)
     exampleBullet(app, canvas)    
 
