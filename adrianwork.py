@@ -1,20 +1,28 @@
 import math, copy, random
 from cmu_112_graphics import *
-from cmu_cs3_graphics import *
 
-class invader:
-    def __init__(self):
-        self.r = 20
+class Invader:
+    def __init__(self, x, y, r):
+        self.x = x
+        self.y = y
+        self.r = r
 
 def onAppStart(app):
-    aliens = [(50, 50)]
+    x = app.width//2
+    y = app.height//2 + app.height//3
+    r = 10
+    app.player = Invader(x, y, r)
+    app.dx = 10
 
-def redrawAll(app):
-    drawLabel("bruh", 200, 200, bold = True)
+def onKeyHold(app, keys):
+    if ('right' in keys):
+        app.player.x += app.dx
+    if ('left' in keys):
+        app.player.x -= app.dx
+
+def redrawAll(app, canvas):
+    canvas.create_oval(app.player.x, app.player.y, app.player.r)
 
 def main():
     runApp()
 main()
-
-if __name__ == "__main__":
-    main()
