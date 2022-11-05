@@ -6,6 +6,12 @@ class Invader:
         self.x = x
         self.y = y
         self.r = r
+    def getX(self):
+        return self.x
+    def getY(self):
+        return self.y
+    def getR(self):
+        return self.r
 
 def onAppStart(app):
     x = app.width//2
@@ -21,7 +27,7 @@ def onKeyHold(app, keys):
         app.player.x -= app.dx
 
 def redrawAll(app, canvas):
-    canvas.create_oval(app.player.x, app.player.y, app.player.r)
+    canvas.create_oval(app.player.getX(), app.player.getY(), app.player.getR())
 
 def main():
     runApp()
