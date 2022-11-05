@@ -24,12 +24,12 @@ class enemy():
 def appStarted(app):
     #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
     image = Image.open("./space.png")
-    imageResize = image.resize((app.width, app.height))
-    app.backgroundIMG = ImageTk.PhotoImage(imageResize)
+    spaceResize = image.resize((app.width, app.height))
+    app.backgroundIMG = ImageTk.PhotoImage(spaceResize)
 
     image = Image.open("./spaceship.png")
-    imageResize = image.resize((app.width//7, app.height//7))
-    app.spaceShip = ImageTk.PhotoImage(imageResize)
+    shipResize = image.resize((app.width//7, app.height//7))
+    app.spaceShip = ImageTk.PhotoImage(shipResize)
 
     app.width = 400
     app.height = 400
@@ -40,7 +40,11 @@ def appStarted(app):
     app.bulletTime = 0
 
 def keyStarted(app,event):
-    pass
+    if event.key == "r":
+        app.spaceShip = app.spaceShip.rotate(20)
+
+    if event.key == "e":
+        app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
 def timerFired(app):
     app.enemyTime += 100
@@ -48,14 +52,11 @@ def timerFired(app):
          currentEnemy = enemy(app)
          x = currentEnemy.getXY()[0]
          y = currentEnemy.getXY()[1]
-         print(x,y)
          if x not in app.enemyXSet:
             app.enemyList = app.enemyList + [[x,y]]
             app.enemyDict[x] = y
             app.enemyXSet.add(x)
 
-         print(app.enemyList)
-         print(app.enemyDict)
          app.enemyTime = 0
 
     for cords in app.enemyList:
