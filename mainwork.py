@@ -110,7 +110,33 @@ def exampleEnemy(app,canvas):
         x = enemy[0]
         y = enemy[1]
         r = 15
-        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")    
+        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")   
+
+def drawBorder(app, canvas):
+    canvas.create_rectangle(0, 0, app.width, app.height/10, fill = 'green')
+    canvas.create_text(app.width / 4, app.height / 20, 
+                        text = f'Score:{app.score}', font = 'courier')
+    canvas.create_text(app. width / 1.35, app.height / 20, 
+                        text = f'Lives:{app.lives}', font = 'courier')
+
+def drawGameOver(app, canvas):
+    canvas.create_text(app.width / 2, app.height / 2, text = 'Game Over!',
+                       font = 'courier 20 bold', fill = 'green')
+    canvas.create_text(app.width / 2, app.height * (3 / 5),
+                       text = 'Press r to restart',
+                       font = 'courier 18 bold', fill = 'green')
+
+def drawIntroduction(app, canvas):
+    canvas.create_text (app.width / 2, app.height / 2, 
+                        text = 'Welcome to Hack 112 Space Invaders!!!', 
+                        font = 'courier 12 bold', fill = 'green', )
+    canvas.create_text (app.width / 2, app.height * (3 / 5),
+                        text = '''Shoot all invading aliens befor they reach 
+    you, and aviod their lazer beams.''', 
+                        font = 'courier 10', fill = 'green')
+    canvas.create_text (app.width / 2, app.height * (4 / 5), 
+                        text = 'Press r to start', font = 'courier 10',
+                        fill = 'green') 
 
 def redrawAll(app,canvas):
     canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
