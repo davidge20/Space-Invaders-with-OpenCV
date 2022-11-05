@@ -1,4 +1,5 @@
 import math, copy, random
+from cmu_112_graphics import * 
 
 print("hello world")
 
@@ -12,10 +13,17 @@ def main():
 if __name__ == "__main__":
     main()
 
-def appStarted():
+def appStarted(app):
     pass
 
 def keyStarted(app,event):
     pass
 
-# runApp(width = 400, height = 400)
+def redrawAll(app,canvas):
+    pass
+
+def main():
+    runApp(width = 400, height = 400)
+
+if __name__ == "__main__":
+    main()
