@@ -3,8 +3,6 @@ from cmu_112_graphics import *
 
 class invader:
     def __init__(self):
-        # self.r = 20
-        # self.x = app.width//2
         pass
 
 class bullets:
@@ -13,7 +11,6 @@ class bullets:
             self.x = enemy.getXY[0]
             self.y = enemy.getXY[1]
             app.enemyDict[self.x].get()
-
 
 class enemy():
     def __init__(self, app):
@@ -37,7 +34,7 @@ def keyStarted(app,event):
 
 def timerFired(app):
     app.enemyTime += 100
-    if app.enemyTime == 1000:
+    if app.enemyTime == 1000 and len(app.enemyList) < 7:
          currentEnemy = enemy(app)
          x = currentEnemy.getXY()[0]
          y = currentEnemy.getXY()[1]
@@ -72,7 +69,6 @@ def exampleBullet(app,canvas):
         y = app.enemyDict[bullet]
         r = 10
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "green")
-
 
 def exampleEnemy(app,canvas):
     for enemy in app.enemyList:
