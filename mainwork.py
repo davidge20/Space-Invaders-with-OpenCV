@@ -54,8 +54,11 @@ def keyPressed(app,event):
         app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
     if event.key == 'Space':
-        app.bulletX, app.bulletY = app.player.X, app.player.Y
-        app.playerBullets.append((app.bulletX, app.bulletY))
+        if app.bulletTime > 200:
+            app.bulletX, app.bulletY = app.player.x, app.player.y
+            app.playerBullets.append([app.bulletX, app.bulletY])
+            app.bulletTime = 0
+
     if event.key == 'Right':
         if app.player.x + app.player.r < app.width:
             app.player.x += app.dx
@@ -64,8 +67,12 @@ def keyPressed(app,event):
             app.player.x -= app.dx
 
 def timerFired(app):
-    for (app.bulletX, app.bulletY) in app.playerBullets:
-        app.bulletY -= 10
+    app.bulletTime += 100
+    for bullet in app.playerBullets:
+        bullet[1] -= 10
+        if bullet[1] < 0:
+            app.playerBullets.remove(bullet)
+        app.bulletTime = 0
 
     app.enemyTime += 100
     if app.enemyTime == 1000 and len(app.enemyList) < 7:
@@ -84,7 +91,6 @@ def timerFired(app):
         yVal += 1
         cords[1] = yVal
 
-    app.bulletTime += 100
     for bullet in app.enemyDict:
         if app.enemyDict[bullet] > app.height:
             for cords in app.enemyList:
@@ -115,10 +121,12 @@ def redrawAll(app,canvas):
     exampleBullet(app, canvas) 
 
     canvas.create_oval(app.player.x - app.player.r, app.player.y - app.player.r, 
-                     app.player.x + app.player.r, app.player.y +app.player.r)
-    for (app.bulletX, app.bulletY) in app.playerBullets:
-        canvas.create_oval(app.bulletX - app.player.r, app.bulletY - app.player.r,
-                           app.bulletX + app.player.r, app.bulletY + app.player.r)   
+                     app.player.x + app.player.r, app.player.y + app.player.r, fill = "black")
+    for bullet in app.playerBullets:
+        bulletX = bullet[0]
+        bulletY = bullet[1]
+        canvas.create_oval(bulletX - app.player.r, bulletY - app.player.r,
+                           bulletX + app.player.r, bulletY + app.player.r, fill = "purple")   
 
 def main():
     runApp(width = 400, height = 400)
