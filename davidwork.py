@@ -1,5 +1,6 @@
 import math, copy, random
 from cmu_112_graphics import * 
+from PIL import Image
 
 class invader:
     def __init__(self):
@@ -21,6 +22,15 @@ class enemy():
         return [self.x, self.y]
 
 def appStarted(app):
+    #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
+    image = Image.open("./space.png")
+    spaceResize = image.resize((app.width, app.height))
+    app.backgroundIMG = ImageTk.PhotoImage(spaceResize)
+
+    image = Image.open("./spaceship.png")
+    shipResize = image.resize((app.width//7, app.height//7))
+    app.spaceShip = ImageTk.PhotoImage(shipResize)
+
     app.width = 400
     app.height = 400
     app.enemyList = []
@@ -30,7 +40,11 @@ def appStarted(app):
     app.bulletTime = 0
 
 def keyStarted(app,event):
-    pass
+    if event.key == "r":
+        app.spaceShip = app.spaceShip.rotate(20)
+
+    if event.key == "e":
+        app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
 def timerFired(app):
     app.enemyTime += 100
@@ -38,14 +52,11 @@ def timerFired(app):
          currentEnemy = enemy(app)
          x = currentEnemy.getXY()[0]
          y = currentEnemy.getXY()[1]
-         print(x,y)
          if x not in app.enemyXSet:
             app.enemyList = app.enemyList + [[x,y]]
             app.enemyDict[x] = y
             app.enemyXSet.add(x)
 
-         print(app.enemyList)
-         print(app.enemyDict)
          app.enemyTime = 0
 
     for cords in app.enemyList:
@@ -61,7 +72,6 @@ def timerFired(app):
                     app.enemyDict[bullet] = cords[1]
             continue
         app.enemyDict[bullet] += 5
-        print(app.enemyDict)
 
 def exampleBullet(app,canvas):
     for bullet in app.enemyDict:
@@ -75,9 +85,12 @@ def exampleEnemy(app,canvas):
         x = enemy[0]
         y = enemy[1]
         r = 15
-        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")
+        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")    
 
 def redrawAll(app,canvas):
+    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    canvas.create_image(200, 300, image = app.spaceShip)
+
     exampleEnemy(app,canvas)
     exampleBullet(app, canvas)    
 
