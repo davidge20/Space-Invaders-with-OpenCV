@@ -1,14 +1,12 @@
-<<<<<<< HEAD
-print("hello world")
-=======
 import math, copy, random
 from cmu_112_graphics import * 
-
-print("hello world")
 
 class invader:
     def __init__(self):
         self.r = 20
+
+class enemy:
+    pass
 
 def main():
     app = invader
@@ -30,4 +28,3 @@ def main():
 
 if __name__ == "__main__":
     main()
->>>>>>> 6334cbfb7636f44b4959e10212f8b4f0de932f00
