@@ -22,6 +22,15 @@ class enemy():
         return [self.x, self.y]
 
 def appStarted(app):
+    #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
+    image = Image.open("./space.png")
+    imageResize = image.resize((app.width, app.height))
+    app.backgroundIMG = ImageTk.PhotoImage(imageResize)
+
+    image = Image.open("./spaceship.png")
+    imageResize = image.resize((app.width//7, app.height//7))
+    app.spaceShip = ImageTk.PhotoImage(imageResize)
+
     app.width = 400
     app.height = 400
     app.enemyList = []
@@ -29,7 +38,6 @@ def appStarted(app):
     app.enemyXSet = set()
     app.enemyTime = 0
     app.bulletTime = 0
-    app.backgroundIMG = PhotoImage(file = "space.png")
 
 def keyStarted(app,event):
     pass
@@ -63,7 +71,6 @@ def timerFired(app):
                     app.enemyDict[bullet] = cords[1]
             continue
         app.enemyDict[bullet] += 5
-        print(app.enemyDict)
 
 def exampleBullet(app,canvas):
     for bullet in app.enemyDict:
@@ -80,7 +87,9 @@ def exampleEnemy(app,canvas):
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")    
 
 def redrawAll(app,canvas):
-    canvas.create_image( 0, 0, image = app.backgroundIMG)
+    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    canvas.create_image(200, 300, image = app.spaceShip)
+
     exampleEnemy(app,canvas)
     exampleBullet(app, canvas)    
 
