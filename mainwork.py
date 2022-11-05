@@ -57,10 +57,11 @@ def keyPressed(app,event):
         app.bulletX, app.bulletY = app.player.X, app.player.Y
         app.playerBullets.append((app.bulletX, app.bulletY))
     if event.key == 'Right':
-        app.player.x += app.dx
-        print(app.player.x)
+        if app.player.x + app.player.r < app.width:
+            app.player.x += app.dx
     if event.key == 'Left':
-        app.player.x -= app.dx
+        if app.player.x - app.player.r > 0:
+            app.player.x -= app.dx
 
 def timerFired(app):
     for (app.bulletX, app.bulletY) in app.playerBullets:
