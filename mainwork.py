@@ -54,7 +54,6 @@ def keyPressed(app,event):
         app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
     if event.key == 'Space':
-        if app.bulletTime > 200:
             app.bulletX, app.bulletY = app.player.x, app.player.y
             app.playerBullets.append([app.bulletX, app.bulletY])
             app.bulletTime = 0
