@@ -72,7 +72,7 @@ def appStarted(app):
     app.enemyTime = 0
     app.bulletTime = 0
 
-    app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 10)
+    app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 15)
     app.dx = 10
     app.playerBullets = []
 
@@ -226,6 +226,9 @@ def drawIntroduction(app, canvas):
 def redrawAll(app,canvas):
     #canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
     #canvas.create_image(200, 300, image = app.spaceShip)
+    if app.gameOver is False:
+        drawIntroduction(app,canvas)
+
     drawBorder(app, canvas)
 
     exampleEnemy(app,canvas)
@@ -237,7 +240,10 @@ def redrawAll(app,canvas):
         bulletX = bullet[0]
         bulletY = bullet[1]
         canvas.create_oval(bulletX - app.player.r, bulletY - app.player.r,
-                           bulletX + app.player.r, bulletY + app.player.r, fill = "purple")   
+                           bulletX + app.player.r, bulletY + app.player.r, fill = "purple")
+
+    if app.gameOver:
+        drawGameOver(app,canvas)   
 
 def main():
     runApp(width = 400, height = 400)
