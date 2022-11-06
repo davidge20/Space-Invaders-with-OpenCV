@@ -1,35 +1,35 @@
 import math, copy, random
 from cmu_112_graphics import * 
-from PIL import Image
+#from PIL import Image
 
-import cv2
+# import cv2
 
-###############################################################################
-#https://itsourcecode.com/free-projects/opencv/eye-detection-opencv-python-with-source-code/
+# ###############################################################################
+# #https://itsourcecode.com/free-projects/opencv/eye-detection-opencv-python-with-source-code/
 
-# Load the cascade
-face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-# To capture video from webcam. 
-cap = cv2.VideoCapture(0)
-while True:
-    # Read the frame
-    _, img = cap.read()
-    # Convert to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # Detect the faces
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-    print(faces)
-    # Draw the rectangle around each face
-    for (x, y, w, h) in faces:
-        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-    # Display
-    cv2.imshow('img', img)
-    # Stop if escape key is pressed
-    k = cv2.waitKey(30) & 0xff
-    if k==27:
-        break
-# Release the VideoCapture object
-cap.release()
+# # Load the cascade
+# face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+# # To capture video from webcam. 
+# cap = cv2.VideoCapture(0)
+# while True:
+#     # Read the frame
+#     _, img = cap.read()
+#     # Convert to grayscale
+#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#     # Detect the faces
+#     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+#     print(faces)
+#     # Draw the rectangle around each face
+#     for (x, y, w, h) in faces:
+#         cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+#     # Display
+#     cv2.imshow('img', img)
+#     # Stop if escape key is pressed
+#     k = cv2.waitKey(30) & 0xff
+#     if k==27:
+#         break
+# # Release the VideoCapture object
+# cap.release()
 
 ###################################################################
 class Invader:
@@ -55,13 +55,13 @@ class enemy():
 
 def appStarted(app):
     #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
-    app.image1 = Image.open("./space.png")
-    app.spaceResize = app.image1.resize((app.width, app.height))
-    app.backgroundIMG = ImageTk.PhotoImage(app.spaceResize)
+    #app.image1 = Image.open("./space.png")
+    #app.spaceResize = app.image1.resize((app.width, app.height))
+    #app.backgroundIMG = ImageTk.PhotoImage(app.spaceResize)
 
-    app.image2 = Image.open("./spaceship.png")
-    app.shipResize = app.image2.resize((app.width//7, app.height//7))
-    app.spaceShip = ImageTk.PhotoImage(app.shipResize)
+    #app.image2 = Image.open("./spaceship.png")
+    #app.shipResize = app.image2.resize((app.width//7, app.height//7))
+    #app.spaceShip = ImageTk.PhotoImage(app.shipResize)
     
 
     app.width = 400
@@ -105,14 +105,14 @@ def checkInvaderCollison(app, bullet):
     invaderY1 = app.player.y + app.player.r
     #bulet = current x
     #app.enemydict[bulet] = current y
-    buletX0 = bullet - r
-    buletX1 = bullet + r
-    buletY0 = app.enemydict[bullet] - r
-    buletY1 = app.enemydict[bullet] + r
-    return ((invaderX0 <= buletX0 <= invaderX1) or 
-            (invaderX0 <= buletX1 <= invaderX1) or 
-            (invaderY0 <= buletY0 <= invaderY1) or 
-            (invaderY0 <= buletY1 <= invaderY1)) 
+    bulletX0 = bullet - r
+    bulletX1 = bullet + r
+    bulletY0 = app.enemyDict[bullet] - r
+    bulletY1 = app.enemyDict[bullet] + r
+    return (((invaderX0 <= bulletX0 <= invaderX1) or 
+            (invaderX0 <= bulletX1 <= invaderX1)) and 
+            ((invaderY0 <= bulletY0 <= invaderY1) or
+            (invaderY0 <= bulletY1 <= invaderY1))) 
 
 def timerFired(app):
     app.bulletTime += 100
@@ -148,7 +148,9 @@ def timerFired(app):
         app.enemyDict[bullet] += 5
         if checkInvaderCollison(app, bullet) == True:
             app.lives -= 1
-            app.enemyDict.remove(bullet)
+            print(app.lives)
+            del app.enemyDict[bullet]
+            break
 
 def exampleBullet(app,canvas):
     for bullet in app.enemyDict:
@@ -191,8 +193,8 @@ def drawIntroduction(app, canvas):
                         fill = 'green') 
 
 def redrawAll(app,canvas):
-    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
-    canvas.create_image(200, 300, image = app.spaceShip)
+    #canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    #canvas.create_image(200, 300, image = app.spaceShip)
 
     exampleEnemy(app,canvas)
     exampleBullet(app, canvas) 
