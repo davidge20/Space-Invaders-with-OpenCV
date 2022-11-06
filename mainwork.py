@@ -1,35 +1,49 @@
 import math, copy, random
 from cmu_112_graphics import * 
+from tkinter import *
+
 from PIL import Image
 
-# import cv2
+import cv2
+
 
 # ###############################################################################
 # #https://itsourcecode.com/free-projects/opencv/eye-detection-opencv-python-with-source-code/
 
-# # Load the cascade
-# face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-# # To capture video from webcam. 
-# cap = cv2.VideoCapture(0)
-# while True:
-#     # Read the frame
-#     _, img = cap.read()
-#     # Convert to grayscale
-#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#     # Detect the faces
-#     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-#     print(faces)
-#     # Draw the rectangle around each face
-#     for (x, y, w, h) in faces:
-#         cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-#     # Display
-#     cv2.imshow('img', img)
-#     # Stop if escape key is pressed
-#     k = cv2.waitKey(30) & 0xff
-#     if k==27:
-#         break
-# # Release the VideoCapture object
-# cap.release()
+def video():
+    # Load the cascade
+    face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+    # To capture video from webcam. 
+    cap = cv2.VideoCapture(0)
+    while True:
+        # Read the frame
+        _, img = cap.read()
+        # Convert to grayscale
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        # Detect the faces
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        print(faces)
+        # Draw the rectangle around each face
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        # Display
+        cv2.imshow('img', img)
+        # Stop if escape key is pressed
+        k = cv2.waitKey(30) & 0xff
+        if k==27:
+            break
+    # Release the VideoCapture object
+    cap.release()
+
+root = Tk()
+
+# def openNewWindow():
+#   newWindow = Toplevel(root)
+#   newWindow.title("New page")
+#   newWindow.geometry("700x400")
+
+button = Button(root, text="Click me", command=video)
+button.pack()
 
 ###################################################################
 class Invader:
@@ -63,7 +77,6 @@ def appStarted(app):
     #app.shipResize = app.image2.resize((app.width//7, app.height//7))
     #app.spaceShip = ImageTk.PhotoImage(app.shipResize)
     
-
     app.width = 400
     app.height = 400
     app.enemyList = []
@@ -226,7 +239,7 @@ def drawIntroduction(app, canvas):
                         fill = 'green') 
 
 def redrawAll(app,canvas):
-    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    # canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
     #canvas.create_image(200, 300, image = app.spaceShip)
     if app.gameOver is False:
         drawIntroduction(app,canvas)
