@@ -85,6 +85,12 @@ def drawIntroduction(app, canvas):
                         fill = 'green')
 
 def drawEnemy(app, canvas, cx, cy, r):
+    # left antenna 
+    canvas.create_rectangle(cx - r * (1 / 2), cy - (r * 1.5), cx - r * (1 / 4), 
+                            cy, fill = 'green')
+    # right antenna
+    canvas.create_rectangle(cx + r * (1 / 2), cy - (r * 1.5), cx + r * (1 / 4),
+                            cy, fill = 'green')
     #body
     canvas.create_oval(cx - r * (4 / 3), cy - r, cx + r * (4 / 3), cy + r,
                      fill = 'green')
@@ -94,14 +100,31 @@ def drawEnemy(app, canvas, cx, cy, r):
     # rigth eye
     canvas.create_oval(cx + r * (1 / 6), cy - r * (4 / 5),
                             cx + r * (5 / 6), cy - r * (1 / 5), fill = 'black')
-    # left antenna 
-    canvas.create_rectangle(cx - r * (1 / 2), cy - r, cx + r * (1 / 2), cy + r,
-                            fill = 'green')
-    # right antenna
-    canvas.crete_rectangle()
-
+    
 def drawInvader(app, canvas, cx, cy, r):
-    pass
+    # top
+    canvas.create_oval(cx - r * (6 / 7), cy - r * 1.5, cx + r * (6 / 7),
+                        cy - r * (1 / 2), fill = 'blue')
+    # body
+    canvas.create_oval(cx - r * (5 / 3), cy - r, cx + r * (5 / 3), cy + r,
+                        fill = 'yellow')
+    # windows
+    canvas.create_oval(cx - r * (1 / 5), cy - r * (1 / 5), cx + r * (1 / 5),
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx - r * (4 / 5), cy - r * (1 / 5), cx - r * (2 / 5), 
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx - r * (7 / 5), cy - r * (1 / 5), cx - r, 
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx + r * (4 / 5), cy - r * (1 / 5), cx + r * (2 / 5), 
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx + r * (7 / 5), cy - r * (1 / 5), cx + r, 
+                        cy + r * (1 / 5), fill = 'red')
+
+def drawDeadInvader(app, canvas, cx, cy, r):
+    canvas.create_oval(cx - r * (6 / 7), cy - r * 1.5, cx + r * (6 / 7),
+                        cy - r * (1 / 2), fill = 'black')
+    canvas.create_oval(cx - r * (5 / 3), cy - r, cx + r * (5 / 3), cy + r,
+                        fill = 'black')
 
 def keyStarted(app,event):
     pass
@@ -110,8 +133,8 @@ def redrawAll(app,canvas):
     #drawBorder(app, canvas)
     #drawGameOver(app, canvas)
     #drawIntroduction(app, canvas)
-    drawEnemy(app, canvas, 200, 200, 100)
-    
+    #drawEnemy(app, canvas, 200, 200, 100)
+    drawInvader(app, canvas, 200, 200, 100)
 
 def main():
     runApp(width = 400, height = 400)
