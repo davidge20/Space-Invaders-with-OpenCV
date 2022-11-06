@@ -76,6 +76,8 @@ def appStarted(app):
     app.dx = 10
     app.playerBullets = []
 
+    app.lives = 3
+
 def keyPressed(app,event):
     if event.key == "r":
         app.spaceShip = app.spaceShip.rotate(20)
@@ -94,6 +96,23 @@ def keyPressed(app,event):
     if event.key == 'Left':
         if app.player.x - app.player.r > 0:
             app.player.x -= app.dx
+
+def checkInvaderCollison(app, bullet):
+    r = 10
+    invaderX0 = app.player.x - app.player.r
+    invaderX1 = app.player.x + app.player.r
+    invaderY0 = app.player.y - app.player.r
+    invaderY1 = app.player.y + app.player.r
+    #bulet = current x
+    #app.enemydict[bulet] = current y
+    buletX0 = bullet - r
+    buletX1 = bullet + r
+    buletY0 = app.enemydict[bullet] - r
+    buletY1 = app.enemydict[bullet] + r
+    return ((invaderX0 <= buletX0 <= invaderX1) or 
+            (invaderX0 <= buletX1 <= invaderX1) or 
+            (invaderY0 <= buletY0 <= invaderY1) or 
+            (invaderY0 <= buletY1 <= invaderY1)) 
 
 def timerFired(app):
     app.bulletTime += 100
@@ -127,7 +146,9 @@ def timerFired(app):
                     app.enemyDict[bullet] = cords[1]
             continue
         app.enemyDict[bullet] += 5
-        checkInvaderCollision(app, bullet)
+        if checkInvaderCollison(app, bullet) == True:
+            app.lives -= 1
+            app.enemyDict.remove(bullet)
 
 def exampleBullet(app,canvas):
     for bullet in app.enemyDict:
@@ -142,23 +163,6 @@ def exampleEnemy(app,canvas):
         y = enemy[1]
         r = 15
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")  
-
-def checkInvaderCollison(app, bullet):
-    r = 10
-    invaderX0 = app.player.x - app.player.r
-    invaderX1 = app.player.x + app.player.r
-    invaderY0 = app.player.y - app.player.r
-    invaderY1 = app.player.y + app.player.r
-    #bulet = current x
-    #app.enemydict[bulet] = current y
-    buletX0 = bullet - r
-    buletX1 = bullet + r
-    buletY0 = app.enemydict[bullet] - r
-    buletY1 = app.enemydict[bullet] + r
-    return ((invaderX0 <= buletX0 <= invaderX1) or 
-            (invaderX0 <= buletX1 <= invaderX1) or 
-            (invaderY0 <= buletY0 <= invaderY1) or 
-            (invaderY0 <= buletY1 <= invaderY1)) 
 
 def drawBorder(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height/10, fill = 'green')
