@@ -78,8 +78,15 @@ def appStarted(app):
 
     app.lives = 3
     app.score = 0
+    app.gameOver = False
 
 def keyPressed(app,event):
+    if app.gameOver:
+        return
+
+    if event.key == "t":
+        runApp(width = 400, height = 400)
+
     if event.key == "r":
         app.spaceShip = app.spaceShip.rotate(20)
 
@@ -136,6 +143,9 @@ def checkEnemyCollision(app, bullet):
             app.score += 10
 
 def timerFired(app):
+    if app.lives <= 0:
+        app.gameOver = True
+        return
     app.bulletTime += 100
     for bullet in app.playerBullets:
         bullet[1] -= 10
