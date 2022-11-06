@@ -87,6 +87,7 @@ def keyPressed(app,event):
         app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
     if event.key == 'Space':
+        if app.bulletTime > 400:
             app.bulletX, app.bulletY = app.player.x, app.player.y
             app.playerBullets.append([app.bulletX, app.bulletY])
             app.bulletTime = 0
@@ -141,7 +142,6 @@ def timerFired(app):
         checkEnemyCollision(app, bullet)
         if bullet[1] < 0:
             app.playerBullets.remove(bullet)
-        app.bulletTime = 0
 
     app.enemyTime += 100
     if app.enemyTime == 1000:
