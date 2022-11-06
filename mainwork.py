@@ -143,7 +143,7 @@ def checkEnemyCollision(app, bullet):
             app.score += 10
 
 def timerFired(app):
-    if app.score >= 20:
+    if app.score >= 100:
         app.gameOver = True
     if app.lives <= 0:
         app.gameOver = True
@@ -247,7 +247,7 @@ def redrawAll(app,canvas):
     if app.gameOver:
         drawGameOver(app,canvas)  
 
-    if app.score >= 20:
+    if app.score >= 100:
         canvas.create_text(app.width//2, app.height * 2//5, text = "Winner!!", 
                         font = "courier 18 bold", fill = 'green') 
 
