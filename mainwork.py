@@ -80,9 +80,12 @@ def appStarted(app):
     app.lives = 3
     app.score = 0
     app.gameOver = False
+    app.showIntro = True
+    app.gameStart = False
 
 def keyPressed(app,event):
     if event.key == "r":
+        app.showIntro = False
         runApp(width = 400, height = 400)
         app.gameStart = True
 
@@ -266,14 +269,15 @@ def drawIntroduction(app, canvas):
 def redrawAll(app,canvas):
     canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
     #canvas.create_image(200, 300, image = app.spaceShip)
-    if app.gameOver is False:
+    if (app.gameOver is False and app.showIntro == True and 
+        app.gameStart == False):
         drawIntroduction(app,canvas)
 
     drawBorder(app, canvas)
     drawEnemy(app, canvas)
     exampleBullet(app, canvas) 
     drawInvader(app, canvas)
-    
+
     for bullet in app.playerBullets:
         bulletX = bullet[0]
         bulletY = bullet[1]
