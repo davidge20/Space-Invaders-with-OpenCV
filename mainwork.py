@@ -118,6 +118,7 @@ def timerFired(app):
     app.bulletTime += 100
     for bullet in app.playerBullets:
         bullet[1] -= 10
+        # check for collision here
         if bullet[1] < 0:
             app.playerBullets.remove(bullet)
         app.bulletTime = 0
