@@ -83,6 +83,7 @@ def appStarted(app):
 def keyPressed(app,event):
     if event.key == "r":
         runApp(width = 400, height = 400)
+        app.gameStart = True
 
     if app.gameOver:
         return
@@ -192,12 +193,26 @@ def exampleBullet(app,canvas):
         r = 10
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "green")
 
-def exampleEnemy(app,canvas):
+def drawEnemy(app, canvas):
+    r = 15
     for enemy in app.enemyList:
-        x = enemy[0]
-        y = enemy[1]
-        r = 15
-        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")  
+        cx = enemy[0]
+        cy = enemy[1]
+    # left antenna 
+        canvas.create_rectangle(cx - r * (1 / 2), cy - (r * 1.5), 
+                                cx - r * (1 / 4), cy, fill = 'green')
+    # right antenna
+        canvas.create_rectangle(cx + r * (1 / 2), cy - (r * 1.5), 
+                                cx + r * (1 / 4), cy, fill = 'green')
+    #body
+        canvas.create_oval(cx - r * (4 / 3), cy - r, cx + r * (4 / 3), 
+                            cy + r, fill = 'green')
+    #left eye
+        canvas.create_oval(cx - r * (5 / 6), cy - r * (4 / 5),
+                             cx - r * (1 / 6), cy - r * (1 / 5), fill = 'black')
+    # rigth eye
+        canvas.create_oval(cx + r * (1 / 6), cy - r * (4 / 5),
+                            cx + r * (5 / 6), cy - r * (1 / 5), fill = 'black')  
 
 def drawBorder(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height/10, fill = 'green')
@@ -232,8 +247,7 @@ def redrawAll(app,canvas):
         drawIntroduction(app,canvas)
 
     drawBorder(app, canvas)
-
-    exampleEnemy(app,canvas)
+    drawEnemy(app, canvas)
     exampleBullet(app, canvas) 
 
     canvas.create_oval(app.player.x - app.player.r, app.player.y - app.player.r, 
