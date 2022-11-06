@@ -72,6 +72,7 @@ def appStarted(app):
     app.enemyTime = 0
     app.bulletTime = 0
 
+    #
     app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 15)
     app.dx = 10
     app.playerBullets = []
@@ -193,6 +194,28 @@ def exampleBullet(app,canvas):
         r = 10
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "green")
 
+def drawInvader(app, canvas):
+    cx = app.player.x 
+    cy = app.player.y
+    r = app.player.r
+    # top
+    canvas.create_oval(cx - r * (6 / 7), cy - r * 1.5, cx + r * (6 / 7),
+                        cy - r * (1 / 2), fill = 'blue')
+    # body
+    canvas.create_oval(cx - r * (5 / 3), cy - r, cx + r * (5 / 3), cy + r,
+                        fill = 'yellow')
+    # windows
+    canvas.create_oval(cx - r * (1 / 5), cy - r * (1 / 5), cx + r * (1 / 5),
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx - r * (4 / 5), cy - r * (1 / 5), cx - r * (2 / 5), 
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx - r * (7 / 5), cy - r * (1 / 5), cx - r, 
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx + r * (4 / 5), cy - r * (1 / 5), cx + r * (2 / 5), 
+                        cy + r * (1 / 5), fill = 'red')
+    canvas.create_oval(cx + r * (7 / 5), cy - r * (1 / 5), cx + r, 
+                        cy + r * (1 / 5), fill = 'red')
+
 def drawEnemy(app, canvas):
     r = 15
     for enemy in app.enemyList:
@@ -249,9 +272,8 @@ def redrawAll(app,canvas):
     drawBorder(app, canvas)
     drawEnemy(app, canvas)
     exampleBullet(app, canvas) 
-
-    canvas.create_oval(app.player.x - app.player.r, app.player.y - app.player.r, 
-                     app.player.x + app.player.r, app.player.y + app.player.r, fill = "white")
+    drawInvader(app, canvas)
+    
     for bullet in app.playerBullets:
         bulletX = bullet[0]
         bulletY = bullet[1]
