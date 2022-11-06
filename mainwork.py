@@ -1,51 +1,8 @@
 import math, copy, random
 from cmu_112_graphics import * 
-from tkinter import *
-
-from PIL import Image
-
 import cv2
 
 
-# ###############################################################################
-# #https://itsourcecode.com/free-projects/opencv/eye-detection-opencv-python-with-source-code/
-
-def video():
-    # Load the cascade
-    face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-    # To capture video from webcam. 
-    cap = cv2.VideoCapture(0)
-    while True:
-        # Read the frame
-        _, img = cap.read()
-        # Convert to grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # Detect the faces
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-        print(faces)
-        # Draw the rectangle around each face
-        for (x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        # Display
-        cv2.imshow('img', img)
-        # Stop if escape key is pressed
-        k = cv2.waitKey(30) & 0xff
-        if k==27:
-            break
-    # Release the VideoCapture object
-    cap.release()
-
-root = Tk()
-
-# def openNewWindow():
-#   newWindow = Toplevel(root)
-#   newWindow.title("New page")
-#   newWindow.geometry("700x400")
-
-button = Button(root, text="Click me", command=video)
-button.pack()
-
-###################################################################
 class Invader:
     def __init__(self, x, y, r):
         self.x = x
@@ -68,15 +25,16 @@ class enemy():
         return [self.x, self.y]
 
 def appStarted(app):
-    # From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
+    #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
     app.image1 = Image.open("./space.png")
     app.spaceResize = app.image1.resize((app.width, app.height))
     app.backgroundIMG = ImageTk.PhotoImage(app.spaceResize)
 
-    #app.image2 = Image.open("./spaceship.png")
-    #app.shipResize = app.image2.resize((app.width//7, app.height//7))
-    #app.spaceShip = ImageTk.PhotoImage(app.shipResize)
+    app.image2 = Image.open("./spaceship.png")
+    app.shipResize = app.image2.resize((app.width//7, app.height//7))
+    app.spaceShip = ImageTk.PhotoImage(app.shipResize)
     
+
     app.width = 400
     app.height = 400
     app.enemyList = []
@@ -85,29 +43,18 @@ def appStarted(app):
     app.enemyTime = 0
     app.bulletTime = 0
 
-    app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 15)
+    app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 10)
     app.dx = 10
     app.playerBullets = []
 
-    app.lives = 3
-    app.score = 0
-    app.gameOver = False
-
 def keyPressed(app,event):
     if event.key == "r":
-        runApp(width = 400, height = 400)
+        app.spaceShip = app.spaceShip.rotate(20)
 
-    if app.gameOver:
-        return
-
-    # if event.key == "r":
-    #     app.spaceShip = app.spaceShip.rotate(20)
-
-    # if event.key == "e":
-    #     app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
+    if event.key == "e":
+        app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
     if event.key == 'Space':
-        if app.bulletTime > 400:
             app.bulletX, app.bulletY = app.player.x, app.player.y
             app.playerBullets.append([app.bulletX, app.bulletY])
             app.bulletTime = 0
@@ -119,57 +66,16 @@ def keyPressed(app,event):
         if app.player.x - app.player.r > 0:
             app.player.x -= app.dx
 
-def checkInvaderCollison(app, bullet):
-    r = 10
-    invaderX0 = app.player.x - app.player.r
-    invaderX1 = app.player.x + app.player.r
-    invaderY0 = app.player.y - app.player.r
-    invaderY1 = app.player.y + app.player.r
-    #bulet = current x
-    #app.enemydict[bulet] = current y
-    bulletX0 = bullet - r
-    bulletX1 = bullet + r
-    bulletY0 = app.enemyDict[bullet] - r
-    bulletY1 = app.enemyDict[bullet] + r
-    return (((invaderX0 <= bulletX0 <= invaderX1) or 
-            (invaderX0 <= bulletX1 <= invaderX1)) and 
-            ((invaderY0 <= bulletY0 <= invaderY1) or
-            (invaderY0 <= bulletY1 <= invaderY1))) 
-
-def checkEnemyCollision(app, bullet):
-    r = 10
-    bulletX0 = bullet[0] - r
-    bulletX1 = bullet[0] + r
-    bulletY0 = bullet[1] - r
-    bulletY1 = bullet[1] + r
-    for enemy in app.enemyList:
-        enemyX0 = enemy[0] - r
-        enemyX1 = enemy[0] + r
-        enemyY0 = enemy[1] - r
-        enemyY1 = enemy[1] + r
-        if (((enemyX0 <= bulletX0 <= enemyX1) or 
-                (enemyX0 <= bulletX1 <= enemyX1)) and 
-                ((enemyY0 <= bulletY0 <= enemyY1) or
-                (enemyY0 <= bulletY1 <= enemyY1))) == True:
-            app.enemyList.remove(enemy)
-            app.enemyXSet.remove(enemy[0])
-            app.score += 10
-
 def timerFired(app):
-    if app.score >= 100:
-        app.gameOver = True
-    if app.lives <= 0:
-        app.gameOver = True
-        return
     app.bulletTime += 100
     for bullet in app.playerBullets:
         bullet[1] -= 10
-        checkEnemyCollision(app, bullet)
         if bullet[1] < 0:
             app.playerBullets.remove(bullet)
+        app.bulletTime = 0
 
     app.enemyTime += 100
-    if app.enemyTime == 1000:
+    if app.enemyTime == 1000 and len(app.enemyList) < 7:
          currentEnemy = enemy(app)
          x = currentEnemy.getXY()[0]
          y = currentEnemy.getXY()[1]
@@ -192,11 +98,6 @@ def timerFired(app):
                     app.enemyDict[bullet] = cords[1]
             continue
         app.enemyDict[bullet] += 5
-        if checkInvaderCollison(app, bullet) == True:
-            app.lives -= 1
-            print(app.lives)
-            del app.enemyDict[bullet]
-            break
 
 def exampleBullet(app,canvas):
     for bullet in app.enemyDict:
@@ -210,7 +111,7 @@ def exampleEnemy(app,canvas):
         x = enemy[0]
         y = enemy[1]
         r = 15
-        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")  
+        canvas.create_oval(x - r, y - r, x + r, y + r, fill = "blue")   
 
 def drawBorder(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height/10, fill = 'green')
@@ -239,30 +140,19 @@ def drawIntroduction(app, canvas):
                         fill = 'green') 
 
 def redrawAll(app,canvas):
-    # canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
-    #canvas.create_image(200, 300, image = app.spaceShip)
-    if app.gameOver is False:
-        drawIntroduction(app,canvas)
-
-    drawBorder(app, canvas)
+    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    canvas.create_image(200, 300, image = app.spaceShip)
 
     exampleEnemy(app,canvas)
     exampleBullet(app, canvas) 
 
     canvas.create_oval(app.player.x - app.player.r, app.player.y - app.player.r, 
-                     app.player.x + app.player.r, app.player.y + app.player.r, fill = "white")
+                     app.player.x + app.player.r, app.player.y + app.player.r, fill = "black")
     for bullet in app.playerBullets:
         bulletX = bullet[0]
         bulletY = bullet[1]
         canvas.create_oval(bulletX - app.player.r, bulletY - app.player.r,
-                           bulletX + app.player.r, bulletY + app.player.r, fill = "purple" )
-
-    if app.gameOver:
-        drawGameOver(app,canvas)  
-
-    if app.score >= 100:
-        canvas.create_text(app.width//2, app.height * 2//5, text = "Winner!!", 
-                        font = "courier 18 bold", fill = 'green') 
+                           bulletX + app.player.r, bulletY + app.player.r, fill = "purple")   
 
 def main():
     runApp(width = 400, height = 400)
