@@ -81,11 +81,11 @@ def appStarted(app):
     app.gameOver = False
 
 def keyPressed(app,event):
-    if app.gameOver:
-        return
-
     if event.key == "t":
         runApp(width = 400, height = 400)
+
+    if app.gameOver:
+        return
 
     if event.key == "r":
         app.spaceShip = app.spaceShip.rotate(20)
