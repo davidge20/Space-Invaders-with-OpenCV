@@ -2,7 +2,7 @@ import math, copy, random
 from cmu_112_graphics import * 
 from PIL import Image
 
-# import cv2
+import cv2
 
 # ###############################################################################
 # #https://itsourcecode.com/free-projects/opencv/eye-detection-opencv-python-with-source-code/
@@ -30,6 +30,41 @@ from PIL import Image
 #         break
 # # Release the VideoCapture object
 # cap.release()
+
+def video(app):
+    totalX = 0
+    # Read the frame
+    _, img = app.cap.read()
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Detect the faces
+    faces = app.face_cascade.detectMultiScale(gray, 1.1, 4)
+
+    # Draw the rectangle around each face
+    for (x, y, w, h) in faces:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        totalX += x
+    # Display
+    cv2.imshow('img', img)
+
+    if len(faces) == 0:
+         if app.bulletTime > 400:
+            app.bulletX, app.bulletY = app.player.x, app.player.y
+            app.playerBullets.append([app.bulletX, app.bulletY])
+            app.bulletTime = 0
+
+    if len(faces) > 0:
+        app.avgX = (totalX/len(faces))
+    else:
+        app.avgX = 0
+
+    app.dx = app.avgX//60
+
+    if app.dx > 12:
+        app.player.x += app.dx
+ 
+    if app.dx < 12:
+        app.player.x -= app.dx
 
 ###################################################################
 class Invader:
@@ -74,14 +109,20 @@ def appStarted(app):
 
     #
     app.player = Invader(app.width//2, y = app.height//2 + app.height//3, r = 15)
-    app.dx = 10
+    app.avgX = 0
+    app.dx = app.avgX//10
     app.playerBullets = []
+
+    app.playerX = app.width//2
 
     app.lives = 3
     app.score = 0
     app.gameOver = False
     app.showIntro = True
     app.gameStart = False
+
+    app.face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+    app.cap = cv2.VideoCapture(0)
 
 def keyPressed(app,event):
     if event.key == "r":
@@ -148,6 +189,8 @@ def checkEnemyCollision(app, bullet):
             app.score += 10
 
 def timerFired(app):
+    video(app)
+
     if app.score >= 100:
         app.gameOver = True
     if app.lives <= 0:
@@ -198,7 +241,8 @@ def exampleBullet(app,canvas):
         canvas.create_oval(x - r, y - r, x + r, y + r, fill = "green")
 
 def drawInvader(app, canvas):
-    cx = app.player.x 
+    cx = app.player.x
+    print(cx)
     cy = app.player.y
     r = app.player.r
     # top
@@ -285,6 +329,7 @@ def redrawAll(app,canvas):
                            bulletX + app.player.r, bulletY + app.player.r, fill = "purple" )
 
     if app.gameOver:
+        app.cap.release() 
         drawGameOver(app,canvas)  
 
     if app.score >= 100:
