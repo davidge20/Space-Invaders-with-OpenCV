@@ -77,6 +77,7 @@ def appStarted(app):
     app.playerBullets = []
 
     app.lives = 3
+    app.score = 0
 
 def keyPressed(app,event):
     if event.key == "r":
@@ -114,17 +115,36 @@ def checkInvaderCollison(app, bullet):
             ((invaderY0 <= bulletY0 <= invaderY1) or
             (invaderY0 <= bulletY1 <= invaderY1))) 
 
+def checkEnemyCollision(app, bullet):
+    r = 10
+    bulletX0 = bullet[0] - r
+    bulletX1 = bullet[0] + r
+    bulletY0 = bullet[1] - r
+    bulletY1 = bullet[1] + r
+    for enemy in app.enemyList:
+        enemyX0 = enemy[0] - r
+        enemyX1 = enemy[0] + r
+        enemyY0 = enemy[1] - r
+        enemyY1 = enemy[1] + r
+        if (((enemyX0 <= bulletX0 <= enemyX1) or 
+                (enemyX0 <= bulletX1 <= enemyX1)) and 
+                ((enemyY0 <= bulletY0 <= enemyY1) or
+                (enemyY0 <= bulletY1 <= enemyY1))) == True:
+            app.enemyList.remove(enemy)
+            app.enemyXSet.remove(enemy[0])
+            app.score += 10
+
 def timerFired(app):
     app.bulletTime += 100
     for bullet in app.playerBullets:
         bullet[1] -= 10
-        # check for collision here
+        checkEnemyCollision(app, bullet)
         if bullet[1] < 0:
             app.playerBullets.remove(bullet)
         app.bulletTime = 0
 
     app.enemyTime += 100
-    if app.enemyTime == 1000 and len(app.enemyList) < 7:
+    if app.enemyTime == 1000:
          currentEnemy = enemy(app)
          x = currentEnemy.getXY()[0]
          y = currentEnemy.getXY()[1]
@@ -196,6 +216,7 @@ def drawIntroduction(app, canvas):
 def redrawAll(app,canvas):
     #canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
     #canvas.create_image(200, 300, image = app.spaceShip)
+    drawBorder(app, canvas)
 
     exampleEnemy(app,canvas)
     exampleBullet(app, canvas) 
