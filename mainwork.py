@@ -1,6 +1,6 @@
 import math, copy, random
 from cmu_112_graphics import * 
-#from PIL import Image
+from PIL import Image
 
 # import cv2
 
@@ -54,10 +54,10 @@ class enemy():
         return [self.x, self.y]
 
 def appStarted(app):
-    #From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
-    #app.image1 = Image.open("./space.png")
-    #app.spaceResize = app.image1.resize((app.width, app.height))
-    #app.backgroundIMG = ImageTk.PhotoImage(app.spaceResize)
+    # From https://www.tutorialspoint.com/how-to-resize-an-image-using-tkinter
+    app.image1 = Image.open("./space.png")
+    app.spaceResize = app.image1.resize((app.width, app.height))
+    app.backgroundIMG = ImageTk.PhotoImage(app.spaceResize)
 
     #app.image2 = Image.open("./spaceship.png")
     #app.shipResize = app.image2.resize((app.width//7, app.height//7))
@@ -81,17 +81,17 @@ def appStarted(app):
     app.gameOver = False
 
 def keyPressed(app,event):
-    if event.key == "t":
+    if event.key == "r":
         runApp(width = 400, height = 400)
 
     if app.gameOver:
         return
 
-    if event.key == "r":
-        app.spaceShip = app.spaceShip.rotate(20)
+    # if event.key == "r":
+    #     app.spaceShip = app.spaceShip.rotate(20)
 
-    if event.key == "e":
-        app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
+    # if event.key == "e":
+    #     app.spaceShip = app.spaceShip.transpose(Image.ROTATE_90)
 
     if event.key == 'Space':
         if app.bulletTime > 400:
@@ -224,7 +224,7 @@ def drawIntroduction(app, canvas):
                         fill = 'green') 
 
 def redrawAll(app,canvas):
-    #canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
+    canvas.create_image(app.width//2, app.height//2, image = app.backgroundIMG)
     #canvas.create_image(200, 300, image = app.spaceShip)
     if app.gameOver is False:
         drawIntroduction(app,canvas)
@@ -235,7 +235,7 @@ def redrawAll(app,canvas):
     exampleBullet(app, canvas) 
 
     canvas.create_oval(app.player.x - app.player.r, app.player.y - app.player.r, 
-                     app.player.x + app.player.r, app.player.y + app.player.r, fill = "black")
+                     app.player.x + app.player.r, app.player.y + app.player.r, fill = "white")
     for bullet in app.playerBullets:
         bulletX = bullet[0]
         bulletY = bullet[1]
@@ -243,7 +243,10 @@ def redrawAll(app,canvas):
                            bulletX + app.player.r, bulletY + app.player.r, fill = "purple")
 
     if app.gameOver:
-        drawGameOver(app,canvas)   
+        drawGameOver(app,canvas)  
+
+    if app.score >= 100:
+        canvas.create_text(app.width//2, app.height//2, text = "Winner!!!!") 
 
 def main():
     runApp(width = 400, height = 400)
