@@ -2,7 +2,7 @@ import math, copy, random
 from cmu_112_graphics import * 
 from PIL import Image
 
-# import cv2
+import cv2
 
 # ###############################################################################
 # #https://itsourcecode.com/free-projects/opencv/eye-detection-opencv-python-with-source-code/
@@ -30,6 +30,20 @@ from PIL import Image
 #         break
 # # Release the VideoCapture object
 # cap.release()
+
+def video(app):
+    # Read the frame
+    _, img = app.cap.read()
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Detect the faces
+    faces = app.face_cascade.detectMultiScale(gray, 1.1, 4)
+    print(faces)
+    # Draw the rectangle around each face
+    for (x, y, w, h) in faces:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    # Display
+    cv2.imshow('img', img)
 
 ###################################################################
 class Invader:
@@ -77,7 +91,12 @@ def appStarted(app):
 
     app.lives = 3
 
+    app.face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+    app.cap = cv2.VideoCapture(0)
+
 def keyPressed(app,event):
+    if event.key == "a":
+        app.cap.release()
     if event.key == "r":
         app.spaceShip = app.spaceShip.rotate(20)
 
@@ -115,6 +134,7 @@ def checkInvaderCollison(app, bullet):
             (invaderY0 <= bulletY1 <= invaderY1))) 
 
 def timerFired(app):
+    video(app)
     app.bulletTime += 100
     for bullet in app.playerBullets:
         bullet[1] -= 10
