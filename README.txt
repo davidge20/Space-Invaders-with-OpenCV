@@ -1,1 +1,1 @@
-# hack112
+We created an interactive space invaders to provide entertainment for those that have certain disabilities that involve the movement of their hands. The users can utilize head movement to control the movement of the invader and functions of their eyes such as blinking to shoot back at the aliens trying to attack them. For this interactive game, we imported the modules cv2(openCV), PIL(Pillow), math, copy, random, cmu_112_graphics. The file that needs to be run in order to use the program is main.py.  
